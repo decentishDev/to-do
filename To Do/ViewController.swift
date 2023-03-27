@@ -14,7 +14,7 @@ class ViewController: UIViewController {
         if let tryData = defaults.object(forKey: "data") as? [[String]] {
             userData = tryData
         }else{
-            userData = [["Math", "Assignment 1"]]
+            userData = [["Math", "Assignment 1", "Assignment 2", "Assignment 3", "Assignment 4", "Assignment 5", "Assignment 6"], ["English"], ["APCSA", "Unit 9"]]
         }
 
         // Configure the stack view
@@ -43,25 +43,38 @@ class ViewController: UIViewController {
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20)
         ])
 
-        for i in 1...20 {
+        for i in 0...(userData.count - 1) {
             let transparentView = UIView()
             transparentView.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.5)
             transparentView.layer.cornerRadius = 10
             stackView.addArrangedSubview(transparentView)
 
             let titleLabel = UILabel()
-            titleLabel.text = "Title \(i)"
+            titleLabel.text = userData[i][0]
             titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
             titleLabel.textAlignment = .left
             titleLabel.sizeToFit()
 
-            let descriptionLabel = UILabel()
-            descriptionLabel.text = "Description \(i)"
-            descriptionLabel.font = UIFont.systemFont(ofSize: 14)
-            descriptionLabel.textAlignment = .left
-            descriptionLabel.sizeToFit()
-
-            let labelsStackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
+            let labelsStackView = UIStackView(arrangedSubviews: [titleLabel])
+            
+            if(userData[i].count == 1){
+                titleLabel.textColor = UIColor.placeholderText
+            }else{
+                let descriptionLabel = UILabel()
+                var desc = ""
+                for j in 1...(userData[i].count - 1){
+                    desc+=userData[i][j]
+                    desc+=", "
+                }
+                desc = String(desc.prefix(desc.count - 2))
+                descriptionLabel.numberOfLines = 2
+                descriptionLabel.text = desc
+                descriptionLabel.font = UIFont.systemFont(ofSize: 14)
+                descriptionLabel.textAlignment = .left
+                descriptionLabel.sizeToFit()
+                labelsStackView.addArrangedSubview(descriptionLabel)
+            }
+            
             labelsStackView.axis = .vertical
             labelsStackView.spacing = 5
             labelsStackView.alignment = .leading
@@ -101,14 +114,21 @@ class ViewController: UIViewController {
     }
     
     @objc func openFolder(sender: UIButton){
-        performSegue(withIdentifier: "folderSegue", sender: nil)
         let folder = sender.accessibilityIdentifier
         currentFolder = Int(folder ?? "0") ?? 0
+        performSegue(withIdentifier: "folderSegue", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let nextVC = (segue.destination as! TasksVC)
-        nextVC.userData = userData
+        var newData: [String] = []
+        if(userData[currentFolder].count > 1){
+            for i in 1...(userData[currentFolder].count - 1) {
+                newData.append(userData[currentFolder][i])
+            }
+        }
+        nextVC.userData = newData
+        nextVC.titleName = userData[currentFolder][0]
         nextVC.currentFolder = currentFolder
     }
 }

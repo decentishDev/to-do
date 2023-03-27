@@ -20,17 +20,38 @@
                     </view>
                     <navigationItem key="navigationItem" title="To Do" id="ATK-Qn-h68"/>
                     <connections>
-                        <segue destination="G02-sn-GRi" kind="show" identifier="folderSegue" id="00Q-UT-ToV"/>
+                        <segue destination="4Lw-TO-mt9" kind="show" identifier="folderSegue" id="SeP-c9-Vev"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="933.58778625954199" y="-27.464788732394368"/>
         </scene>
+        <!--Title-->
+        <scene sceneID="Snl-po-cOL">
+            <objects>
+                <viewController id="4Lw-TO-mt9" customClass="TasksVC" customModule="To_Do" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HcT-GS-3eo">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="P0r-hF-u4G"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Title" id="E9D-8O-arB">
+                        <barButtonItem key="rightBarButtonItem" image="plus.circle.fill" catalog="system" id="diS-Ad-qeR">
+                            <connections>
+                                <action selector="AddTask:" destination="4Lw-TO-mt9" id="EWs-cJ-KxV"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xeq-VR-KVm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="933.58778625954199" y="755.63380281690149"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="8Pg-gq-G3i">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3cm-5q-5Vz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5DS-cG-wc4" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ydy-Xk-xeh">
@@ -42,27 +63,13 @@
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="mbn-bV-36l"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3cm-5q-5Vz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6.8702290076335872" y="-27.464788732394368"/>
         </scene>
-        <!--Tasks-->
-        <scene sceneID="i9O-Ap-Msm">
-            <objects>
-                <viewController id="G02-sn-GRi" customClass="TasksVC" customModule="To_Do" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="wOG-rc-nhz">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="yok-Ig-Z7T"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Tasks" id="K1g-YQ-Fd4"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Rlz-fe-75y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1792" y="-27"/>
-        </scene>
     </scenes>
     <resources>
+        <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
