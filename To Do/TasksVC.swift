@@ -15,12 +15,10 @@ class TasksVC: UIViewController, UITextFieldDelegate {
     let stackView = UIStackView()
     let scrollView = UIScrollView()
     var stackIDs: [Int] = []
-    let textField = UITextField()
     var lastID = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         title = titleName
-        textField.delegate = self
         stackView.axis = .vertical
         stackView.spacing = 5
         stackView.alignment = .fill
@@ -56,22 +54,24 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                 lastID = i
                 transparentView.addSubview(circleButton)
                 circleButton.translatesAutoresizingMaskIntoConstraints = false
-                let titleLabel = UILabel()
-                titleLabel.text = userData[i]
-                titleLabel.font = UIFont.systemFont(ofSize: 20)
-                titleLabel.textAlignment = .left
-                transparentView.addSubview(titleLabel)
-                titleLabel.translatesAutoresizingMaskIntoConstraints = false
+                let textField = UITextField()
+                textField.text = userData[i]
+                textField.font = UIFont.systemFont(ofSize: 20)
+                textField.textAlignment = .left
+                textField.accessibilityIdentifier = String(i)
+                transparentView.addSubview(textField)
+                textField.translatesAutoresizingMaskIntoConstraints = false
+                textField.delegate = self
                 NSLayoutConstraint.activate([
                     circleButton.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
                     circleButton.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor, constant: 10),
                     circleButton.widthAnchor.constraint(equalToConstant: 25),
                     circleButton.heightAnchor.constraint(equalToConstant: 25),
                     
-                    titleLabel.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
-                    titleLabel.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
-                    titleLabel.leadingAnchor.constraint(equalTo: circleButton.trailingAnchor, constant: 10),
-                    titleLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
+                    textField.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
+                    textField.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
+                    textField.leadingAnchor.constraint(equalTo: circleButton.trailingAnchor, constant: 10),
+                    textField.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
                 ])
                 if i < userData.count - 1 {
                     let lineView = UIView()
@@ -80,6 +80,9 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                     lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
                 }
             }
+        }
+        if(userData.count == 0){
+            promptTask()
         }
     }
     @objc func checked(sender: UIButton) {
@@ -101,18 +104,14 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         }
         stackIDs.remove(at: stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!)
         userData.remove(at: index)
+        saveData()
     }
     @IBAction func AddTask(_ sender: UIBarButtonItem) {
-        let alertController = UIAlertController(title: "New task\n\n", message: nil, preferredStyle: .alert)
+        promptTask()
+    }
+    func promptTask(){
+        let alertController = UIAlertController(title: "New task", message: nil, preferredStyle: .alert)
         alertController.addTextField()
-        let colorSwitch = UISwitch()
-
-        let switchView = UIView(frame: CGRect(x: 55, y: 55, width: 80, height: 40))
-        let switchLabel = UILabel(frame: CGRect(x: 65, y: 5, width: 80, height: 20))
-        switchLabel.text = "Important"
-        switchView.addSubview(switchLabel)
-        switchView.addSubview(colorSwitch)
-        alertController.view.addSubview(switchView)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let addAction = UIAlertAction(title: "Add", style: .default) { _ in
             if let taskName = alertController.textFields?.first?.text {
@@ -138,30 +137,42 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                 circleButton.accessibilityIdentifier = String(self.lastID)
                 transparentView.addSubview(circleButton)
                 circleButton.translatesAutoresizingMaskIntoConstraints = false
-                let titleLabel = UILabel()
-                titleLabel.text = taskName
-                if(colorSwitch.isOn){
-                    titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
-                }else{
-                    titleLabel.font = UIFont.systemFont(ofSize: 20)
-                }
-                titleLabel.textAlignment = .left
-                transparentView.addSubview(titleLabel)
-                titleLabel.translatesAutoresizingMaskIntoConstraints = false
+                
+                let textField = UITextField()
+                textField.text = taskName
+                textField.textAlignment = .left
+                textField.accessibilityIdentifier = String(self.lastID)
+                transparentView.addSubview(textField)
+                textField.translatesAutoresizingMaskIntoConstraints = false
+                textField.delegate = self
                 NSLayoutConstraint.activate([
                     circleButton.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
                     circleButton.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor, constant: 10),
                     circleButton.widthAnchor.constraint(equalToConstant: 25),
                     circleButton.heightAnchor.constraint(equalToConstant: 25),
-                    titleLabel.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
-                    titleLabel.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
-                    titleLabel.leadingAnchor.constraint(equalTo: circleButton.trailingAnchor, constant: 10),
-                    titleLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
+                    textField.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
+                    textField.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
+                    textField.leadingAnchor.constraint(equalTo: circleButton.trailingAnchor, constant: 10),
+                    textField.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
                 ])
+                self.saveData()
             }
         }
         alertController.addAction(cancelAction)
         alertController.addAction(addAction)
         present(alertController, animated: true, completion: nil)
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!] = textField.text ?? " "
+        saveData()
+        return true
+    }
+    func saveData(){
+        var oldData: [[String]] = defaults.object(forKey: "data") as! [[String]]
+        var newData: [String] = userData
+        newData.insert(titleName, at: 0)
+        oldData[currentFolder] = newData
+        defaults.set(oldData, forKey: "data")
     }
 }

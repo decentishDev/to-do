@@ -10,13 +10,27 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+//        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
+//        backgroundImage.image = UIImage(named: "pawel-czerwinski-Eru5-VMQZT8-unsplash.jpg")
+//        backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
+//        view.addSubview(backgroundImage)
+//        view.sendSubviewToBack(backgroundImage)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         if let tryData = defaults.object(forKey: "data") as? [[String]] {
             userData = tryData
         }else{
             userData = [["Math", "Assignment 1", "Assignment 2", "Assignment 3", "Assignment 4", "Assignment 5", "Assignment 6"], ["English"], ["APCSA", "Unit 9"]]
+            defaults.set(userData, forKey: "data")
         }
-
+        for subview in stackView.arrangedSubviews {
+            stackView.removeArrangedSubview(subview)
+            subview.removeFromSuperview()
+        }
+        for subview in view.subviews {
+            subview.removeFromSuperview()
+        }
         // Configure the stack view
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -67,7 +81,7 @@ class ViewController: UIViewController {
                     desc+=", "
                 }
                 desc = String(desc.prefix(desc.count - 2))
-                descriptionLabel.numberOfLines = 2
+                descriptionLabel.numberOfLines = 5
                 descriptionLabel.text = desc
                 descriptionLabel.font = UIFont.systemFont(ofSize: 14)
                 descriptionLabel.textAlignment = .left
@@ -106,11 +120,7 @@ class ViewController: UIViewController {
                 labelsStackView.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
             ])
         }
-//        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-//        backgroundImage.image = UIImage(named: "pawel-czerwinski-Eru5-VMQZT8-unsplash.jpg")
-//        backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
-//        view.addSubview(backgroundImage)
-//        view.sendSubviewToBack(backgroundImage)
+
     }
     
     @objc func openFolder(sender: UIButton){
@@ -131,4 +141,66 @@ class ViewController: UIViewController {
         nextVC.titleName = userData[currentFolder][0]
         nextVC.currentFolder = currentFolder
     }
+    
+    @IBAction func addFolder(_ sender: UIBarButtonItem) {
+        let alertController = UIAlertController(title: "Add Folder", message: nil, preferredStyle: .alert)
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Folder Name"
+        }
+        let saveAction = UIAlertAction(title: "Save", style: .default) { (action) in
+            guard let folderName = alertController.textFields?.first?.text else { return }
+            self.userData.append([folderName])
+            self.defaults.set(self.userData, forKey: "data")
+            let transparentView = UIView()
+            transparentView.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.5)
+            transparentView.layer.cornerRadius = 10
+            self.stackView.addArrangedSubview(transparentView)
+
+            let titleLabel = UILabel()
+            titleLabel.text = folderName
+            titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
+            titleLabel.textAlignment = .left
+            titleLabel.sizeToFit()
+
+            let labelsStackView = UIStackView(arrangedSubviews: [titleLabel])
+
+            titleLabel.textColor = UIColor.placeholderText
+            
+            labelsStackView.axis = .vertical
+            labelsStackView.spacing = 5
+            labelsStackView.alignment = .leading
+            labelsStackView.sizeToFit()
+            labelsStackView.distribution = .fillProportionally
+
+            transparentView.addSubview(labelsStackView)
+            transparentView.sizeToFit()
+
+            let backgroundButton = UIButton()
+            backgroundButton.addTarget(self, action: #selector(self.openFolder), for: .touchUpInside)
+            backgroundButton.backgroundColor = UIColor.clear
+            backgroundButton.translatesAutoresizingMaskIntoConstraints = false
+            backgroundButton.accessibilityIdentifier = String(self.userData.count - 1)
+            transparentView.addSubview(backgroundButton)
+
+            NSLayoutConstraint.activate([
+                backgroundButton.topAnchor.constraint(equalTo: transparentView.topAnchor),
+                backgroundButton.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor),
+                backgroundButton.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor),
+                backgroundButton.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor)
+            ])
+
+            labelsStackView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                labelsStackView.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
+                labelsStackView.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
+                labelsStackView.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor, constant: 10),
+                labelsStackView.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
+            ])
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
 }

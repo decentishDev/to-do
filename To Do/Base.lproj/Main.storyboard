@@ -18,7 +18,18 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" title="To Do" id="ATK-Qn-h68"/>
+                    <navigationItem key="navigationItem" title="To Do" id="ATK-Qn-h68">
+                        <barButtonItem key="leftBarButtonItem" image="pencil.slash" catalog="system" id="keL-my-cTH">
+                            <connections>
+                                <segue destination="yCc-n9-CA7" kind="show" id="c6a-Sg-bmd"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="plus.circle.fill" catalog="system" id="IbQ-lo-wAw">
+                            <connections>
+                                <action selector="addFolder:" destination="BYZ-38-t0r" id="xs0-qM-N8T"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="4Lw-TO-mt9" kind="show" identifier="folderSegue" id="SeP-c9-Vev"/>
                     </connections>
@@ -26,6 +37,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="933.58778625954199" y="-27.464788732394368"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Y9q-AF-Hoa">
+            <objects>
+                <viewController id="yCc-n9-CA7" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="UKN-LC-Edz">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="rsH-uX-QW0"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="dGB-fK-7mh"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eO2-cL-Vhh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1706" y="-27"/>
         </scene>
         <!--Title-->
         <scene sceneID="Snl-po-cOL">
@@ -47,7 +74,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xeq-VR-KVm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="933.58778625954199" y="755.63380281690149"/>
+            <point key="canvasLocation" x="934" y="699"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="8Pg-gq-G3i">
@@ -65,10 +92,11 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3cm-5q-5Vz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6.8702290076335872" y="-27.464788732394368"/>
+            <point key="canvasLocation" x="192" y="-27"/>
         </scene>
     </scenes>
     <resources>
+        <image name="pencil.slash" catalog="system" width="128" height="113"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
