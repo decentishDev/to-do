@@ -68,9 +68,22 @@ class ViewController: UIViewController {
             titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
             titleLabel.textAlignment = .left
             titleLabel.sizeToFit()
+            let countLabel = UILabel()
+            if(userData[i].count > 1){
+                countLabel.text = "\(userData[i].count - 1)"
+                countLabel.font = UIFont.boldSystemFont(ofSize: 20)
+                countLabel.textAlignment = .right
+                countLabel.sizeToFit()
+                countLabel.translatesAutoresizingMaskIntoConstraints = false
+                transparentView.addSubview(countLabel)
+                NSLayoutConstraint.activate([
+                    countLabel.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
+                    countLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
+                ])
+            }
 
             let labelsStackView = UIStackView(arrangedSubviews: [titleLabel])
-            
+
             if(userData[i].count == 1){
                 titleLabel.textColor = UIColor.placeholderText
             }else{
@@ -88,7 +101,7 @@ class ViewController: UIViewController {
                 descriptionLabel.sizeToFit()
                 labelsStackView.addArrangedSubview(descriptionLabel)
             }
-            
+
             labelsStackView.axis = .vertical
             labelsStackView.spacing = 5
             labelsStackView.alignment = .leading
@@ -117,9 +130,14 @@ class ViewController: UIViewController {
                 labelsStackView.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
                 labelsStackView.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
                 labelsStackView.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor, constant: 10),
-                labelsStackView.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
             ])
+            if(userData[i].count > 1){
+                NSLayoutConstraint.activate([
+                    labelsStackView.trailingAnchor.constraint(equalTo: countLabel.leadingAnchor, constant: -10)
+                ])
+            }
         }
+
 
     }
     
@@ -130,16 +148,19 @@ class ViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let nextVC = (segue.destination as! TasksVC)
-        var newData: [String] = []
-        if(userData[currentFolder].count > 1){
-            for i in 1...(userData[currentFolder].count - 1) {
-                newData.append(userData[currentFolder][i])
+        if(segue.identifier == "folderSegue"){
+            let nextVC = (segue.destination as! TasksVC)
+            var newData: [String] = []
+            if(userData[currentFolder].count > 1){
+                for i in 1...(userData[currentFolder].count - 1) {
+                    newData.append(userData[currentFolder][i])
+                }
             }
+            nextVC.userData = newData
+            nextVC.titleName = userData[currentFolder][0]
+            nextVC.currentFolder = currentFolder
+            
         }
-        nextVC.userData = newData
-        nextVC.titleName = userData[currentFolder][0]
-        nextVC.currentFolder = currentFolder
     }
     
     @IBAction func addFolder(_ sender: UIBarButtonItem) {
