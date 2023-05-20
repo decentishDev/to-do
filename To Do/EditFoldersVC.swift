@@ -19,6 +19,7 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         userData = defaults.object(forKey: "data") as! [[String]]
+        print(userData[1][1])
         title = titleName
         stackView.axis = .vertical
         stackView.spacing = 5
