@@ -15,6 +15,7 @@
 		8D5911F729CF6E1F00666A9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D5911F629CF6E1F00666A9A /* Assets.xcassets */; };
 		8D5911FA29CF6E1F00666A9A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D5911F829CF6E1F00666A9A /* LaunchScreen.storyboard */; };
 		8D59120229CFEFD000666A9A /* TasksVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59120129CFEFD000666A9A /* TasksVC.swift */; };
+		8DAE7AB82A3806B500071B4D /* FlowchartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DAE7AB72A3806B500071B4D /* FlowchartVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		8D5911F929CF6E1F00666A9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8D5911FB29CF6E1F00666A9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D59120129CFEFD000666A9A /* TasksVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksVC.swift; sourceTree = "<group>"; };
+		8DAE7AB72A3806B500071B4D /* FlowchartVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowchartVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				8D5911FB29CF6E1F00666A9A /* Info.plist */,
 				8D59120129CFEFD000666A9A /* TasksVC.swift */,
 				8D4C4AC929D29BA500E0A298 /* EditFoldersVC.swift */,
+				8DAE7AB72A3806B500071B4D /* FlowchartVC.swift */,
 			);
 			path = "To Do";
 			sourceTree = "<group>";
@@ -147,6 +150,7 @@
 				8D5911F229CF6E1C00666A9A /* ViewController.swift in Sources */,
 				8D4C4ACA29D29BA500E0A298 /* EditFoldersVC.swift in Sources */,
 				8D5911EE29CF6E1C00666A9A /* AppDelegate.swift in Sources */,
+				8DAE7AB82A3806B500071B4D /* FlowchartVC.swift in Sources */,
 				8D5911F029CF6E1C00666A9A /* SceneDelegate.swift in Sources */,
 				8D59120229CFEFD000666A9A /* TasksVC.swift in Sources */,
 			);
