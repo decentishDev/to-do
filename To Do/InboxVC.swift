@@ -1,24 +1,27 @@
 //
-//  TasksVC.swift
+//  InboxVC.swift
 //  To Do
 //
-//  Created by Matthew Lundeen on 3/25/23.
+//  Created by Matthew Lundeen on 7/13/23.
 //
 
 import UIKit
 
-class TasksVC: UIViewController, UITextFieldDelegate {
+class InboxVC: UIViewController, UITextFieldDelegate {
     let defaults = UserDefaults.standard
     var userData: [String] = []
-    var currentFolder = 0
-    var titleName = ""
     let stackView = UIStackView()
     let scrollView = UIScrollView()
     var stackIDs: [Int] = []
     var lastID = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = titleName
+        if let tryData = defaults.object(forKey: "inbox") as? [String] {
+            userData = tryData
+        }else{
+            userData = ["Example task"]
+            defaults.set(userData, forKey: "inbox")
+        }
         stackView.axis = .vertical
         stackView.spacing = 5
         stackView.alignment = .fill
@@ -170,10 +173,6 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         return true
     }
     func saveData(){
-        var oldData: [[String]] = defaults.object(forKey: "data") as! [[String]]
-        var newData: [String] = userData
-        newData.insert(titleName, at: 0)
-        oldData[currentFolder] = newData
-        defaults.set(oldData, forKey: "data")
+        defaults.set(userData, forKey: "inbox")
     }
 }

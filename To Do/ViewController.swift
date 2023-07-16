@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         if let tryData = defaults.object(forKey: "data") as? [[String]] {
             userData = tryData
         }else{
-            userData = [["HWLC"]]
+            userData = [["Example folder", "Example task"]]
             defaults.set(userData, forKey: "data")
         }
         for subview in stackView.arrangedSubviews {
