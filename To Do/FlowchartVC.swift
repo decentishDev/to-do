@@ -71,8 +71,8 @@ class FlowchartVC: UIViewController {
             let stackView = generateGroup(taskGroup: group)
             viewHolder.addSubview(stackView)
             stackView.leadingAnchor.constraint(equalTo: viewHolder.leadingAnchor, constant: CGFloat(lastX + 200)).isActive = true //+350
-            let newYPos = lastY + 300 * ((Double(i) / Double(nextGroups.count - 1)) - 0.5))
-            stackView.topAnchor.constraint(equalTo: viewHolder.topAnchor, constant: CGFloat(newYPos).isActive = true
+            let newYPos = lastY + Int(300 * ((Double(i) / Double(nextGroups.count - 1)) - 0.5))
+            stackView.topAnchor.constraint(equalTo: viewHolder.topAnchor, constant: CGFloat(newYPos)).isActive = true
             generateNextGroup(lastX: 100, lastY: newYPos, lastGroup: group)
         }
     }
