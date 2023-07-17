@@ -28,10 +28,10 @@ class FlowchartVC: UIViewController {
             defaults.set(FlowchartVC.taskGroups, forKey: "taskGroups")
         }
         
-        let group1 = TaskGroup(ID: 0, title: "Group 1", senderTasks: [], nextTasks: [2], tasks: ["Group 1 task 1", "Group 1 task 2", "Group 1 task 3"])
-        let group2 = TaskGroup(ID: 1, title: "Group 2", senderTasks: [], nextTasks: [3], tasks: ["Group 2 task 1", "Group 2 task 2"])
-        let group3 = TaskGroup(ID: 2, title: "Group 3", senderTasks: [1], nextTasks: [], tasks: ["Group 3 task 1", "Group 3 task 2"])
-        let group4 = TaskGroup(ID: 3, title: "Group 4", senderTasks: [2], nextTasks: [], tasks: ["Group 4 task 1", "Group 4 task 2"])
+        let group1 = TaskGroup(ID: 0, title: "Group 1", senderTasks: [], nextTasks: [0], tasks: ["Group 1 task 1", "Group 1 task 2", "Group 1 task 3"])
+        let group2 = TaskGroup(ID: 1, title: "Group 2", senderTasks: [], nextTasks: [0], tasks: ["Group 2 task 1", "Group 2 task 2"])
+        let group3 = TaskGroup(ID: 2, title: "Group 3", senderTasks: [0], nextTasks: [], tasks: ["Group 3 task 1", "Group 3 task 2"])
+        let group4 = TaskGroup(ID: 3, title: "Group 4", senderTasks: [0], nextTasks: [], tasks: ["Group 4 task 1", "Group 4 task 2"])
         FlowchartVC.taskGroups = [group1, group2, group3, group4]
         
         var c: [Int] = []
@@ -70,8 +70,11 @@ class FlowchartVC: UIViewController {
         for (i, group) in nextGroups.enumerated() {
             let stackView = generateGroup(taskGroup: group)
             viewHolder.addSubview(stackView)
-            stackView.leadingAnchor.constraint(equalTo: viewHolder.leadingAnchor, constant: CGFloat(lastX + 200)).isActive = true //+350
-            let newYPos = lastY + Int(300 * ((Double(i) / Double(nextGroups.count - 1)) - 0.5))
+            stackView.leadingAnchor.constraint(equalTo: viewHolder.leadingAnchor, constant: CGFloat(lastX + 350)).isActive = true //+350
+            var newYPos: Int = lastY
+            if(nextGroups.count != 1){
+                newYPos = lastY + Int(300 * ((Double(i) / Double(nextGroups.count - 1)) - 0.5))
+            }
             stackView.topAnchor.constraint(equalTo: viewHolder.topAnchor, constant: CGFloat(newYPos)).isActive = true
             generateNextGroup(lastX: 100, lastY: newYPos, lastGroup: group)
         }
