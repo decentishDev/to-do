@@ -28,11 +28,14 @@ class FlowchartVC: UIViewController {
             defaults.set(FlowchartVC.taskGroups, forKey: "taskGroups")
         }
         
-        let group1 = TaskGroup(ID: 0, title: "Group 1", senderTasks: [], nextTasks: [0], tasks: ["Group 1 task 1", "Group 1 task 2", "Group 1 task 3"])
-        let group2 = TaskGroup(ID: 1, title: "Group 2", senderTasks: [], nextTasks: [0], tasks: ["Group 2 task 1", "Group 2 task 2"])
-        let group3 = TaskGroup(ID: 2, title: "Group 3", senderTasks: [0], nextTasks: [], tasks: ["Group 3 task 1", "Group 3 task 2"])
-        let group4 = TaskGroup(ID: 3, title: "Group 4", senderTasks: [0], nextTasks: [], tasks: ["Group 4 task 1", "Group 4 task 2"])
-        FlowchartVC.taskGroups = [group1, group2, group3, group4]
+        let group1 = TaskGroup(ID: 0, title: "Group 1", senderTasks: [], nextTasks: [1, 2, 3], tasks: ["Group 1 task 1", "Group 1 task 2", "Group 1 task 3"])
+        let group2 = TaskGroup(ID: 1, title: "Group 2", senderTasks: [0], nextTasks: [4], tasks: ["Group 2 task 1", "Group 2 task 2"])
+        let group3 = TaskGroup(ID: 2, title: "Group 3", senderTasks: [0], nextTasks: [5], tasks: ["Group 3 task 1", "Group 3 task 2"])
+        let group4 = TaskGroup(ID: 3, title: "Group 4", senderTasks: [0], nextTasks: [6], tasks: ["Group 4 task 1", "Group 4 task 2"])
+        let group5 = TaskGroup(ID: 4, title: "Group 5", senderTasks: [1], nextTasks: [], tasks: ["Group 5 task 1", "Group 5 task 2"])
+        let group6 = TaskGroup(ID: 5, title: "Group 6", senderTasks: [2], nextTasks: [], tasks: ["Group 6 task 1", "Group 6 task 2"])
+        let group7 = TaskGroup(ID: 6, title: "Group 7", senderTasks: [3], nextTasks: [], tasks: ["Group 7 task 1", "Group 7 task 2"])
+        FlowchartVC.taskGroups = [group1, group2, group3, group4, group5, group6, group7]
         
         var c: [Int] = []
         for (i, group) in FlowchartVC.taskGroups.enumerated() {
@@ -56,6 +59,35 @@ class FlowchartVC: UIViewController {
         view.isUserInteractionEnabled = true
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
+        
+        
+    }
+    
+    func drawLine(x1: CGFloat, y1: CGFloat, x2: CGFloat, y2: CGFloat) {
+        var X1 = x1
+        var Y1 = y1
+        var X2 = x2
+        var Y2 = y2
+        
+        let lineLayer = CAShapeLayer()
+        lineLayer.strokeColor = UIColor.secondaryLabel.cgColor
+        lineLayer.lineWidth = 2.0
+
+        let path = UIBezierPath()
+        X1 += 10
+        X2 -= 10
+        if(Y1 < Y2){
+            Y1 += 10
+            Y2 -= 10
+        }else{
+            Y1 -= 10
+            Y2 += 10
+        }
+        path.move(to: CGPoint(x: X1, y: Y1))
+        path.addLine(to: CGPoint(x: X2, y: Y2))
+        
+        lineLayer.path = path.cgPath
+        viewHolder.layer.addSublayer(lineLayer)
     }
     
     func generateNextGroup(lastX: Int, lastY: Int, lastGroup: TaskGroup) {
@@ -70,13 +102,14 @@ class FlowchartVC: UIViewController {
         for (i, group) in nextGroups.enumerated() {
             let stackView = generateGroup(taskGroup: group)
             viewHolder.addSubview(stackView)
-            stackView.leadingAnchor.constraint(equalTo: viewHolder.leadingAnchor, constant: CGFloat(lastX + 350)).isActive = true //+350
+            stackView.leadingAnchor.constraint(equalTo: viewHolder.leadingAnchor, constant: CGFloat(lastX + 450)).isActive = true //+350
             var newYPos: Int = lastY
             if(nextGroups.count != 1){
-                newYPos = lastY + Int(300 * ((Double(i) / Double(nextGroups.count - 1)) - 0.5))
+                newYPos = lastY + Int(200 * ((Double(i) / Double(nextGroups.count - 1)) - 0.5))
             }
             stackView.topAnchor.constraint(equalTo: viewHolder.topAnchor, constant: CGFloat(newYPos)).isActive = true
-            generateNextGroup(lastX: 100, lastY: newYPos, lastGroup: group)
+            drawLine(x1: CGFloat(lastX + 280), y1: CGFloat(lastY), x2: CGFloat(lastX + 450), y2: CGFloat(newYPos))
+            generateNextGroup(lastX: lastX + 450, lastY: newYPos, lastGroup: group)
         }
     }
     
