@@ -10,6 +10,7 @@ import UIKit
 class TasksVC: UIViewController, UITextFieldDelegate {
     let defaults = UserDefaults.standard
     var userData: [String] = []
+    var timeData = 0
     var currentFolder = 0
     var titleName = ""
     let stackView = UIStackView()
@@ -112,9 +113,28 @@ class TasksVC: UIViewController, UITextFieldDelegate {
     func promptTask(){
         let alertController = UIAlertController(title: "New task", message: nil, preferredStyle: .alert)
         alertController.addTextField()
+        let pickerView = UIPickerView()
+        pickerView.dataSource = self
+        pickerView.delegate = self
+        pickerView.tag = 1 // Tag the picker so that we can identify it later
+        pickerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            pickerView.topAnchor.constraint(equalTo: alertController.textFields![0].bottomAnchor, constant: 8),
+            pickerView.leadingAnchor.constraint(equalTo: alertController.view.leadingAnchor, constant: 16),
+            pickerView.trailingAnchor.constraint(equalTo: alertController.view.trailingAnchor, constant: -16)
+        ])
+
+        alertController.view.addSubview(pickerView)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let addAction = UIAlertAction(title: "Add", style: .default) { _ in
             if let taskName = alertController.textFields?.first?.text {
+                let selectedRow = pickerView.selectedRow(inComponent: 0) // Get the selected hour
+                            let selectedHour = selectedRow
+                            let selectedMinute = pickerView.selectedRow(inComponent: 1) // Get the selected minute
+
+                            // Calculate the total time in minutes
+                self.timeData = selectedHour * 60 + selectedMinute
+                
                 if(self.stackView.arrangedSubviews.count > 0){
                     let lineView = UIView()
                     lineView.backgroundColor = UIColor.placeholderText
@@ -175,5 +195,27 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         newData.insert(titleName, at: 0)
         oldData[currentFolder] = newData
         defaults.set(oldData, forKey: "data")
+    }
+}
+        
+extension TasksVC: UIPickerViewDataSource, UIPickerViewDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 2 // Two components for hours and minutes
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if component == 0 { // Hours component
+            return 24 // 0 to 23 hours
+        } else { // Minutes component
+            return 60 // 0 to 59 minutes
+        }
+    }
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if component == 0 { // Hours component
+            return "\(row) hours"
+        } else { // Minutes component
+            return "\(row) minutes"
+        }
     }
 }
