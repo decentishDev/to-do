@@ -76,7 +76,19 @@ class ViewController: UIViewController {
             titleLabel.textAlignment = .left
             titleLabel.sizeToFit()
             let countLabel = UILabel()
+            let timeLabel = UILabel()
             if(userData[i].count > 1){
+                var t = 0
+                for j in 0..<(timeData[i].count){
+                    t += timeData[i][j]
+                }
+                print(t)
+                timeLabel.text = String(format: "%02d:%02d", t / 60, t % 60)
+                timeLabel.font = UIFont.systemFont(ofSize: 20)
+                timeLabel.textAlignment = .right
+                timeLabel.sizeToFit()
+                timeLabel.translatesAutoresizingMaskIntoConstraints = false
+                transparentView.addSubview(timeLabel)
                 countLabel.text = "\(userData[i].count - 1)"
                 countLabel.font = UIFont.boldSystemFont(ofSize: 20)
                 countLabel.textAlignment = .right
@@ -84,8 +96,10 @@ class ViewController: UIViewController {
                 countLabel.translatesAutoresizingMaskIntoConstraints = false
                 transparentView.addSubview(countLabel)
                 NSLayoutConstraint.activate([
+                    timeLabel.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
+                    timeLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -65),
                     countLabel.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
-                    countLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
+                    countLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -25)
                 ])
             }
 
@@ -178,6 +192,7 @@ class ViewController: UIViewController {
         let saveAction = UIAlertAction(title: "Save", style: .default) { (action) in
             guard let folderName = alertController.textFields?.first?.text else { return }
             self.userData.append([folderName])
+            self.timeData.append([])
             self.defaults.set(self.userData, forKey: "data")
             let transparentView = UIView()
             transparentView.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.5)

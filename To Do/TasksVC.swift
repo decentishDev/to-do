@@ -92,7 +92,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
             }
         }
         if(userData.count == 0){
-            promptTask()
+            promptTask(animated: false)
         }
     }
     @objc func checked(sender: UIButton) {
@@ -117,9 +117,9 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         saveData()
     }
     @IBAction func AddTask(_ sender: UIBarButtonItem) {
-        promptTask()
+        promptTask(animated: true)
     }
-    func promptTask(){
+    func promptTask(animated: Bool){
         let alertController = UIAlertController(title: "New task", message: nil, preferredStyle: .alert)
         alertController.addTextField()
         
@@ -130,8 +130,6 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                 let timePickerVC = TimePickerViewController()
                 timePickerVC.completionHandler = { hours, minutes in
                     self.timeData.append(minutes + (hours * 60))
-                    print("works")
-                    
                     if(self.stackView.arrangedSubviews.count > 0){
                         let lineView = UIView()
                         lineView.backgroundColor = UIColor.placeholderText
@@ -192,7 +190,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         }
         alertController.addAction(cancelAction)
         alertController.addAction(addAction)
-        present(alertController, animated: true, completion: nil)
+        present(alertController, animated: animated, completion: nil)
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -229,10 +227,9 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                 
                 // Update the timeData array with the new time
                 if let index = self.stackView.arrangedSubviews.firstIndex(of: taskDetailView) {
-                    print(index / 2)
-                    
                     self.timeData[index / 2] = newMinutes + (newHours * 60)
                 }
+                self.saveData()
             }
             
             let navigationController = UINavigationController(rootViewController: timePickerVC)

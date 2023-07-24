@@ -127,6 +127,11 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="Inbox" id="fX1-zA-EvJ">
+                        <barButtonItem key="leftBarButtonItem" image="gearshape.fill" catalog="system" id="ayX-9G-8EQ">
+                            <connections>
+                                <segue destination="hPe-gy-81e" kind="show" id="gJq-Jl-oFu"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="plus.circle.fill" catalog="system" id="eyB-08-0zp">
                             <connections>
                                 <action selector="AddTask:" destination="Agi-In-wHZ" id="ZJa-Ce-1OT"/>
@@ -180,9 +185,26 @@
             </objects>
             <point key="canvasLocation" x="-117" y="375"/>
         </scene>
+        <!--Settings-->
+        <scene sceneID="R75-j2-QR0">
+            <objects>
+                <viewController id="hPe-gy-81e" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="V49-v8-8Sv">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="GIH-gm-m2t"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Settings" id="qZy-s4-UMZ"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A0P-cc-tAq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-118" y="1984"/>
+        </scene>
     </scenes>
     <resources>
         <image name="arrow.triangle.branch" catalog="system" width="128" height="110"/>
+        <image name="gearshape.fill" catalog="system" width="128" height="123"/>
         <image name="list.bullet.circle.fill" catalog="system" width="128" height="123"/>
         <image name="pencil.slash" catalog="system" width="128" height="113"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
