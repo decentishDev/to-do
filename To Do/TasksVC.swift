@@ -10,7 +10,7 @@ import UIKit
 class TasksVC: UIViewController, UITextFieldDelegate {
     let defaults = UserDefaults.standard
     var userData: [String] = []
-    var timeData = 0
+    var timeData: [Int] = []
     var currentFolder = 0
     var titleName = ""
     let stackView = UIStackView()
@@ -55,6 +55,12 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                 lastID = i
                 transparentView.addSubview(circleButton)
                 circleButton.translatesAutoresizingMaskIntoConstraints = false
+                let editButton = UIButton()
+                editButton.setTitle(String(format: "%02d:%02d", timeData[i] / 60, timeData[i] % 60), for: .normal)
+                editButton.setTitleColor(.systemBlue, for: .normal)
+                editButton.addTarget(self, action: #selector(self.editTimeButtonTapped(sender:)), for: .touchUpInside)
+                transparentView.addSubview(editButton)
+                editButton.translatesAutoresizingMaskIntoConstraints = false
                 let textField = UITextField()
                 textField.text = userData[i]
                 textField.font = UIFont.systemFont(ofSize: 20)
@@ -72,7 +78,10 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                     textField.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
                     textField.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
                     textField.leadingAnchor.constraint(equalTo: circleButton.trailingAnchor, constant: 10),
-                    textField.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
+                    textField.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -100),
+                    
+                    editButton.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
+                    editButton.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
                 ])
                 if i < userData.count - 1 {
                     let lineView = UIView()
@@ -113,70 +122,72 @@ class TasksVC: UIViewController, UITextFieldDelegate {
     func promptTask(){
         let alertController = UIAlertController(title: "New task", message: nil, preferredStyle: .alert)
         alertController.addTextField()
-        let pickerView = UIPickerView()
-        pickerView.dataSource = self
-        pickerView.delegate = self
-        pickerView.tag = 1 // Tag the picker so that we can identify it later
-        pickerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            pickerView.topAnchor.constraint(equalTo: alertController.textFields![0].bottomAnchor, constant: 8),
-            pickerView.leadingAnchor.constraint(equalTo: alertController.view.leadingAnchor, constant: 16),
-            pickerView.trailingAnchor.constraint(equalTo: alertController.view.trailingAnchor, constant: -16)
-        ])
-
-        alertController.view.addSubview(pickerView)
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let addAction = UIAlertAction(title: "Add", style: .default) { _ in
             if let taskName = alertController.textFields?.first?.text {
-                let selectedRow = pickerView.selectedRow(inComponent: 0) // Get the selected hour
-                            let selectedHour = selectedRow
-                            let selectedMinute = pickerView.selectedRow(inComponent: 1) // Get the selected minute
-
-                            // Calculate the total time in minutes
-                self.timeData = selectedHour * 60 + selectedMinute
                 
-                if(self.stackView.arrangedSubviews.count > 0){
-                    let lineView = UIView()
-                    lineView.backgroundColor = UIColor.placeholderText
-                    self.stackView.addArrangedSubview(lineView)
-                    lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+                let timePickerVC = TimePickerViewController()
+                timePickerVC.completionHandler = { hours, minutes in
+                    self.timeData.append(minutes + (hours * 60))
+                    print("works")
+                    
+                    if(self.stackView.arrangedSubviews.count > 0){
+                        let lineView = UIView()
+                        lineView.backgroundColor = UIColor.placeholderText
+                        self.stackView.addArrangedSubview(lineView)
+                        lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+                    }
+                    self.userData.append(taskName)
+                    self.lastID += 1
+                    self.stackIDs.append(self.lastID)
+                    let transparentView = UIView()
+                    transparentView.backgroundColor = UIColor.clear
+                    transparentView.layer.cornerRadius = 10
+                    self.stackView.addArrangedSubview(transparentView)
+                    let circleButton = UIButton()
+                    circleButton.backgroundColor = .clear
+                    circleButton.layer.borderColor = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
+                    circleButton.layer.borderWidth = 1
+                    circleButton.layer.cornerRadius = 12.5
+                    circleButton.addTarget(self, action: #selector(self.checked), for: .touchUpInside)
+                    circleButton.accessibilityIdentifier = String(self.lastID)
+                    transparentView.addSubview(circleButton)
+                    circleButton.translatesAutoresizingMaskIntoConstraints = false
+                    
+                    // Add an "Edit Time" button
+                    let editButton = UIButton()
+                    editButton.setTitle(String(format: "%02d:%02d", hours, minutes), for: .normal)
+                    editButton.setTitleColor(.systemBlue, for: .normal)
+                    editButton.addTarget(self, action: #selector(self.editTimeButtonTapped(sender:)), for: .touchUpInside)
+                    transparentView.addSubview(editButton)
+                    editButton.translatesAutoresizingMaskIntoConstraints = false
+                    
+                    let textField = UITextField()
+                    textField.text = taskName
+                    textField.textAlignment = .left
+                    textField.font = UIFont.systemFont(ofSize: 20)
+                    textField.accessibilityIdentifier = String(self.lastID)
+                    transparentView.addSubview(textField)
+                    textField.translatesAutoresizingMaskIntoConstraints = false
+                    textField.delegate = self
+                    NSLayoutConstraint.activate([
+                        circleButton.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
+                        circleButton.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor, constant: 10),
+                        circleButton.widthAnchor.constraint(equalToConstant: 25),
+                        circleButton.heightAnchor.constraint(equalToConstant: 25),
+                        textField.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
+                        textField.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
+                        textField.leadingAnchor.constraint(equalTo: circleButton.trailingAnchor, constant: 10),
+                        textField.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -100),
+                        editButton.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
+                        editButton.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
+                    ])
+                    self.saveData()
                 }
-                self.userData.append(taskName)
-                self.lastID += 1
-                self.stackIDs.append(self.lastID)
-                let transparentView = UIView()
-                transparentView.backgroundColor = UIColor.clear
-                transparentView.layer.cornerRadius = 10
-                self.stackView.addArrangedSubview(transparentView)
-                let circleButton = UIButton()
-                circleButton.backgroundColor = .clear
-                circleButton.layer.borderColor = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
-                circleButton.layer.borderWidth = 1
-                circleButton.layer.cornerRadius = 12.5
-                circleButton.addTarget(self, action: #selector(self.checked), for: .touchUpInside)
-                circleButton.accessibilityIdentifier = String(self.lastID)
-                transparentView.addSubview(circleButton)
-                circleButton.translatesAutoresizingMaskIntoConstraints = false
                 
-                let textField = UITextField()
-                textField.text = taskName
-                textField.textAlignment = .left
-                textField.font = UIFont.systemFont(ofSize: 20)
-                textField.accessibilityIdentifier = String(self.lastID)
-                transparentView.addSubview(textField)
-                textField.translatesAutoresizingMaskIntoConstraints = false
-                textField.delegate = self
-                NSLayoutConstraint.activate([
-                    circleButton.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
-                    circleButton.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor, constant: 10),
-                    circleButton.widthAnchor.constraint(equalToConstant: 25),
-                    circleButton.heightAnchor.constraint(equalToConstant: 25),
-                    textField.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
-                    textField.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
-                    textField.leadingAnchor.constraint(equalTo: circleButton.trailingAnchor, constant: 10),
-                    textField.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
-                ])
-                self.saveData()
+                let navigationController = UINavigationController(rootViewController: timePickerVC)
+                self.present(navigationController, animated: true, completion: nil)
             }
         }
         alertController.addAction(cancelAction)
@@ -195,6 +206,39 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         newData.insert(titleName, at: 0)
         oldData[currentFolder] = newData
         defaults.set(oldData, forKey: "data")
+        var oldTimes: [[Int]] = defaults.object(forKey: "times") as! [[Int]]
+        oldTimes[currentFolder] = timeData
+        defaults.set(oldTimes, forKey: "times")
+    }
+    
+    @objc func editTimeButtonTapped(sender: UIButton) {
+        guard let taskDetailView = sender.superview else {
+            return
+        }
+        
+        let timeString = sender.currentTitle ?? ""
+        let timeComponents = timeString.components(separatedBy: ":")
+        
+        if timeComponents.count == 2,
+           let hours = Int(timeComponents[0]),
+           let minutes = Int(timeComponents[1]) {
+            let timePickerVC = TimePickerViewController()
+            timePickerVC.completionHandler = { newHours, newMinutes in
+                // Get the button from the taskDetailView and update the time
+                sender.setTitle(String(format: "%02d:%02d", newHours, newMinutes), for: .normal)
+                
+                // Update the timeData array with the new time
+                if let index = self.stackView.arrangedSubviews.firstIndex(of: taskDetailView) {
+                    print(index / 2)
+                    
+                    self.timeData[index / 2] = newMinutes + (newHours * 60)
+                }
+            }
+            
+            let navigationController = UINavigationController(rootViewController: timePickerVC)
+            self.present(navigationController, animated: true, completion: nil)
+        }
+        saveData()
     }
 }
         

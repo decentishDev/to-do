@@ -6,6 +6,7 @@ class ViewController: UIViewController {
     let stackView = UIStackView()
     let defaults = UserDefaults.standard
     var userData: [[String]] = [[]]
+    var timeData: [[Int]] = [[]]
     var currentFolder = 0
 
     override func viewDidLoad() {
@@ -23,6 +24,12 @@ class ViewController: UIViewController {
         }else{
             userData = [["Example folder", "Example task"]]
             defaults.set(userData, forKey: "data")
+        }
+        if let tryData = defaults.object(forKey: "times") as? [[Int]] {
+            timeData = tryData
+        }else{
+            timeData = [[10]]
+            defaults.set(timeData, forKey: "times")
         }
         for subview in stackView.arrangedSubviews {
             stackView.removeArrangedSubview(subview)
@@ -159,7 +166,7 @@ class ViewController: UIViewController {
             nextVC.userData = newData
             nextVC.titleName = userData[currentFolder][0]
             nextVC.currentFolder = currentFolder
-            
+            nextVC.timeData = timeData[currentFolder]
         }
     }
     
