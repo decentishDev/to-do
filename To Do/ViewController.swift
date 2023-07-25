@@ -64,7 +64,7 @@ class ViewController: UIViewController {
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20)
         ])
 
-        for i in 0...(userData.count - 1) {
+        for i in 0..<(userData.count) {
             let transparentView = UIView()
             transparentView.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.5)
             transparentView.layer.cornerRadius = 10
@@ -97,7 +97,7 @@ class ViewController: UIViewController {
                 transparentView.addSubview(countLabel)
                 NSLayoutConstraint.activate([
                     timeLabel.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
-                    timeLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -65),
+                    timeLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -60),
                     countLabel.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
                     countLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -25)
                 ])

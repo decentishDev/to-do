@@ -10,16 +10,19 @@ import UIKit
 class EditFoldersVC: UIViewController, UITextFieldDelegate {
     let defaults = UserDefaults.standard
     var userData: [[String]] = [[]]
+    var timeData: [[Int]] = [[]]
     var currentFolder = 0
     var titleName = ""
     let stackView = UIStackView()
     let scrollView = UIScrollView()
+    var downButtons: [UIButton] = []
+    var upButtons: [UIButton] = []
     var stackIDs: [Int] = []
     var lastID = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         userData = defaults.object(forKey: "data") as! [[String]]
-        print(userData[1][1])
+        timeData = defaults.object(forKey: "times") as! [[Int]]
         title = titleName
         stackView.axis = .vertical
         stackView.spacing = 5
@@ -51,6 +54,7 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
                 deleteButton.tintColor = .red
                 deleteButton.addTarget(self, action: #selector(deleteFolder), for: .touchUpInside)
                 deleteButton.accessibilityIdentifier = String(i)
+                stackIDs.append(i)
                 transparentView.addSubview(deleteButton)
                 deleteButton.translatesAutoresizingMaskIntoConstraints = false
                 
@@ -61,6 +65,10 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
                 upButton.accessibilityIdentifier = String(i)
                 transparentView.addSubview(upButton)
                 upButton.translatesAutoresizingMaskIntoConstraints = false
+                upButtons.append(upButton)
+                if(i == 0){
+                    upButton.isEnabled = false
+                }
                 
                 let downButton = UIButton()
                 downButton.setImage(UIImage(systemName: "arrow.down"), for: .normal)
@@ -69,6 +77,10 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
                 downButton.accessibilityIdentifier = String(i)
                 transparentView.addSubview(downButton)
                 downButton.translatesAutoresizingMaskIntoConstraints = false
+                downButtons.append(downButton)
+                if(i == userData.count - 1){
+                    downButton.isEnabled = false
+                }
                 
                 let textField = UITextField()
                 textField.text = userData[i][0]
@@ -86,7 +98,7 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
                     deleteButton.heightAnchor.constraint(equalToConstant: 25),
                     
                     upButton.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
-                    upButton.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -10),
+                    upButton.trailingAnchor.constraint(equalTo: downButton.leadingAnchor, constant: -10),
                     upButton.widthAnchor.constraint(equalToConstant: 25),
                     upButton.heightAnchor.constraint(equalToConstant: 25),
                     
@@ -116,39 +128,102 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
         }
     }
     @objc func moveTaskUp(sender: UIButton){
+        let index = upButtons.firstIndex(of: sender)!
         
-    }
-    @objc func moveTaskDown(sender: UIButton){
+        let ubutton = upButtons[index]
+        upButtons[index] = upButtons[index - 1]
+        upButtons[index - 1] = ubutton
         
+        let dbutton = downButtons[index]
+        downButtons[index] = downButtons[index - 1]
+        downButtons[index - 1] = dbutton
+        
+        let group = userData[index]
+        userData[index] = userData[index - 1]
+        userData[index - 1] = group
+        
+        let time = timeData[index]
+        timeData[index] = timeData[index - 1]
+        timeData[index - 1] = time
+        
+        let id = stackIDs[index]
+        stackIDs[index] = stackIDs[index - 1]
+        stackIDs[index - 1] = id
+        
+        let transparentView = stackView.arrangedSubviews[index]
+        stackView.removeArrangedSubview(transparentView)
+        stackView.insertArrangedSubview(transparentView, at: index - 1)
+        if(index == userData.count - 1){
+            downButtons[index - 1].isEnabled = true
+            downButtons[index].isEnabled = false
+        }
+        if(index == 1){
+            upButtons[index - 1].isEnabled = false
+            upButtons[index].isEnabled = true
+        }
     }
+    @objc func moveTaskDown(sender: UIButton) {
+        let index = downButtons.firstIndex(of: sender)!
+        
+        let ubutton = upButtons[index + 1]
+        upButtons[index + 1] = upButtons[index]
+        upButtons[index] = ubutton
+        
+        let dbutton = downButtons[index + 1]
+        downButtons[index + 1] = downButtons[index]
+        downButtons[index] = dbutton
+        
+        let group = userData[index + 1]
+        userData[index + 1] = userData[index]
+        userData[index] = group
+        
+        let time = timeData[index + 1]
+        timeData[index + 1] = timeData[index]
+        timeData[index] = time
+        
+        let id = stackIDs[index + 1]
+        stackIDs[index + 1] = stackIDs[index]
+        stackIDs[index] = id
+        
+        let transparentView = stackView.arrangedSubviews[index]
+        stackView.removeArrangedSubview(transparentView)
+        stackView.insertArrangedSubview(transparentView, at: index + 1)
+        
+        if index == 0 {
+            upButtons[index].isEnabled = true
+            upButtons[index + 1].isEnabled = false
+        }
+        
+        if index == userData.count - 2 {
+            downButtons[index].isEnabled = false
+            downButtons[index + 1].isEnabled = true
+        }
+    }
+
     @objc func deleteFolder(sender: UIButton) {
-//        let index = stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!
-//        let transparentView = stackView.arrangedSubviews[index * 2]
-//        if(stackView.arrangedSubviews.count > 1){
-//            let lineIndex = index * 2 + 1
-//            if lineIndex < stackView.arrangedSubviews.count {
-//                let lineView = stackView.arrangedSubviews[lineIndex]
-//                lineView.removeFromSuperview()
-//            }else{
-//                let lineView = stackView.arrangedSubviews[lineIndex - 2]
-//                lineView.removeFromSuperview()
-//            }
-//        }
-//        transparentView.removeFromSuperview()
-//        UIView.animate(withDuration: 0.3) {
-//            self.stackView.layoutIfNeeded()
-//        }
-//        stackIDs.remove(at: stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!)
-//        userData.remove(at: index)
-//        saveData()
+        let index = stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!
+        let transparentView = stackView.arrangedSubviews[index]
+        transparentView.removeFromSuperview()
+        UIView.animate(withDuration: 0.3) {
+            self.stackView.layoutIfNeeded()
+        }
+        stackIDs.remove(at: stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!)
+        userData.remove(at: index)
+        timeData.remove(at: index)
+        upButtons.remove(at: index)
+        downButtons.remove(at: index)
+        upButtons[index].isEnabled = (index == 0)
+        downButtons[index].isEnabled = (index == userData.count - 1)
+        saveData()
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        textField.resignFirstResponder()
-//        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!] = textField.text ?? " "
-//        saveData()
+        textField.resignFirstResponder()
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!][1] = textField.text ?? " "
+        saveData()
         return true
     }
     func saveData(){
         defaults.set(userData, forKey: "data")
+        defaults.set(timeData, forKey: "times")
     }
 }

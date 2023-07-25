@@ -114,6 +114,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         }
         stackIDs.remove(at: stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!)
         userData.remove(at: index)
+        timeData.remove(at: index)
         saveData()
     }
     @IBAction func AddTask(_ sender: UIBarButtonItem) {
