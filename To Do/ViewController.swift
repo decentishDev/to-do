@@ -11,11 +11,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-//        backgroundImage.image = UIImage(named: "pawel-czerwinski-Eru5-VMQZT8-unsplash.jpg")
-//        backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
-//        view.addSubview(backgroundImage)
-//        view.sendSubviewToBack(backgroundImage)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,6 +34,25 @@ class ViewController: UIViewController {
         for subview in view.subviews {
             subview.removeFromSuperview()
         }
+        
+        // Create a UIImageView and set its frame to fill the entire view
+                let backgroundImageView = UIImageView(frame: view.bounds)
+                
+                // Set the content mode to scale the image to fit the view bounds
+                backgroundImageView.contentMode = .scaleAspectFill
+                
+                // Add the UIImageView to the view
+                view.addSubview(backgroundImageView)
+                
+                // Send the UIImageView to the back so it acts as the background
+                view.sendSubviewToBack(backgroundImageView)
+                
+                // Replace "backgroundImageName" with the name of your image file
+                let backgroundImage = UIImage(named: "tom-barrett-hgGplX3PFBg-unsplash.jpg")
+                
+                // Set the image of the UIImageView
+                backgroundImageView.image = backgroundImage
+        
         // Configure the stack view
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -53,7 +68,7 @@ class ViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 65),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -65,10 +80,12 @@ class ViewController: UIViewController {
         ])
 
         for i in 0..<(userData.count) {
-            let transparentView = UIView()
-            transparentView.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.5)
-            transparentView.layer.cornerRadius = 10
-            stackView.addArrangedSubview(transparentView)
+            let blurEffect = UIBlurEffect(style: .regular) // Choose the desired blur style
+            let blurredBackgroundView = UIVisualEffectView(effect: blurEffect)
+            blurredBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+            blurredBackgroundView.layer.cornerRadius = 10
+            blurredBackgroundView.clipsToBounds = true
+            stackView.addArrangedSubview(blurredBackgroundView)
 
             let titleLabel = UILabel()
             titleLabel.text = userData[i][0]
@@ -88,18 +105,18 @@ class ViewController: UIViewController {
                 timeLabel.textAlignment = .right
                 timeLabel.sizeToFit()
                 timeLabel.translatesAutoresizingMaskIntoConstraints = false
-                transparentView.addSubview(timeLabel)
+                blurredBackgroundView.contentView.addSubview(timeLabel)
                 countLabel.text = "\(userData[i].count - 1)"
                 countLabel.font = UIFont.boldSystemFont(ofSize: 20)
                 countLabel.textAlignment = .right
                 countLabel.sizeToFit()
                 countLabel.translatesAutoresizingMaskIntoConstraints = false
-                transparentView.addSubview(countLabel)
+                blurredBackgroundView.contentView.addSubview(countLabel)
                 NSLayoutConstraint.activate([
-                    timeLabel.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
-                    timeLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -60),
-                    countLabel.centerYAnchor.constraint(equalTo: transparentView.centerYAnchor),
-                    countLabel.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -25)
+                    timeLabel.centerYAnchor.constraint(equalTo: blurredBackgroundView.centerYAnchor),
+                    timeLabel.trailingAnchor.constraint(equalTo: blurredBackgroundView.trailingAnchor, constant: -60),
+                    countLabel.centerYAnchor.constraint(equalTo: blurredBackgroundView.centerYAnchor),
+                    countLabel.trailingAnchor.constraint(equalTo: blurredBackgroundView.trailingAnchor, constant: -25)
                 ])
             }
 
@@ -129,28 +146,28 @@ class ViewController: UIViewController {
             labelsStackView.sizeToFit()
             labelsStackView.distribution = .fillProportionally
 
-            transparentView.addSubview(labelsStackView)
-            transparentView.sizeToFit()
+            blurredBackgroundView.contentView.addSubview(labelsStackView)
+            blurredBackgroundView.sizeToFit()
 
             let backgroundButton = UIButton()
             backgroundButton.addTarget(self, action: #selector(openFolder), for: .touchUpInside)
             backgroundButton.backgroundColor = UIColor.clear
             backgroundButton.translatesAutoresizingMaskIntoConstraints = false
             backgroundButton.accessibilityIdentifier = String(i)
-            transparentView.addSubview(backgroundButton)
+            blurredBackgroundView.contentView.addSubview(backgroundButton)
 
             NSLayoutConstraint.activate([
-                backgroundButton.topAnchor.constraint(equalTo: transparentView.topAnchor),
-                backgroundButton.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor),
-                backgroundButton.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor),
-                backgroundButton.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor)
+                backgroundButton.topAnchor.constraint(equalTo: blurredBackgroundView.topAnchor),
+                backgroundButton.bottomAnchor.constraint(equalTo: blurredBackgroundView.bottomAnchor),
+                backgroundButton.leadingAnchor.constraint(equalTo: blurredBackgroundView.leadingAnchor),
+                backgroundButton.trailingAnchor.constraint(equalTo: blurredBackgroundView.trailingAnchor)
             ])
 
             labelsStackView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                labelsStackView.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
-                labelsStackView.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
-                labelsStackView.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor, constant: 10),
+                labelsStackView.topAnchor.constraint(equalTo: blurredBackgroundView.topAnchor, constant: 10),
+                labelsStackView.bottomAnchor.constraint(equalTo: blurredBackgroundView.bottomAnchor, constant: -10),
+                labelsStackView.leadingAnchor.constraint(equalTo: blurredBackgroundView.leadingAnchor, constant: 10),
             ])
             if(userData[i].count > 1){
                 NSLayoutConstraint.activate([
@@ -194,10 +211,13 @@ class ViewController: UIViewController {
             self.userData.append([folderName])
             self.timeData.append([])
             self.defaults.set(self.userData, forKey: "data")
-            let transparentView = UIView()
-            transparentView.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.5)
-            transparentView.layer.cornerRadius = 10
-            self.stackView.addArrangedSubview(transparentView)
+            self.defaults.set(self.timeData, forKey: "times")
+            let blurEffect = UIBlurEffect(style: .regular) // Choose the desired blur style
+            let blurredBackgroundView = UIVisualEffectView(effect: blurEffect)
+            blurredBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+            blurredBackgroundView.layer.cornerRadius = 10
+            blurredBackgroundView.clipsToBounds = true
+            self.stackView.addArrangedSubview(blurredBackgroundView)
 
             let titleLabel = UILabel()
             titleLabel.text = folderName
@@ -215,29 +235,29 @@ class ViewController: UIViewController {
             labelsStackView.sizeToFit()
             labelsStackView.distribution = .fillProportionally
 
-            transparentView.addSubview(labelsStackView)
-            transparentView.sizeToFit()
+            blurredBackgroundView.contentView.addSubview(labelsStackView)
+            blurredBackgroundView.sizeToFit()
 
             let backgroundButton = UIButton()
             backgroundButton.addTarget(self, action: #selector(self.openFolder), for: .touchUpInside)
             backgroundButton.backgroundColor = UIColor.clear
             backgroundButton.translatesAutoresizingMaskIntoConstraints = false
             backgroundButton.accessibilityIdentifier = String(self.userData.count - 1)
-            transparentView.addSubview(backgroundButton)
+            blurredBackgroundView.contentView.addSubview(backgroundButton)
 
             NSLayoutConstraint.activate([
-                backgroundButton.topAnchor.constraint(equalTo: transparentView.topAnchor),
-                backgroundButton.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor),
-                backgroundButton.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor),
-                backgroundButton.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor)
+                backgroundButton.topAnchor.constraint(equalTo: blurredBackgroundView.topAnchor),
+                backgroundButton.bottomAnchor.constraint(equalTo: blurredBackgroundView.bottomAnchor),
+                backgroundButton.leadingAnchor.constraint(equalTo: blurredBackgroundView.leadingAnchor),
+                backgroundButton.trailingAnchor.constraint(equalTo: blurredBackgroundView.trailingAnchor)
             ])
 
             labelsStackView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                labelsStackView.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 10),
-                labelsStackView.bottomAnchor.constraint(equalTo: transparentView.bottomAnchor, constant: -10),
-                labelsStackView.leadingAnchor.constraint(equalTo: transparentView.leadingAnchor, constant: 10),
-                labelsStackView.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -10)
+                labelsStackView.topAnchor.constraint(equalTo: blurredBackgroundView.topAnchor, constant: 10),
+                labelsStackView.bottomAnchor.constraint(equalTo: blurredBackgroundView.bottomAnchor, constant: -10),
+                labelsStackView.leadingAnchor.constraint(equalTo: blurredBackgroundView.leadingAnchor, constant: 10),
+                labelsStackView.trailingAnchor.constraint(equalTo: blurredBackgroundView.trailingAnchor, constant: -10)
             ])
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

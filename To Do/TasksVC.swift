@@ -199,6 +199,11 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         saveData()
         return true
     }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!] = textField.text ?? " "
+        saveData()
+    }
     func saveData(){
         var oldData: [[String]] = defaults.object(forKey: "data") as! [[String]]
         var newData: [String] = userData

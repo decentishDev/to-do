@@ -190,13 +190,13 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
         stackView.insertArrangedSubview(transparentView, at: index + 1)
         
         if index == 0 {
-            upButtons[index].isEnabled = true
-            upButtons[index + 1].isEnabled = false
+            upButtons[index].isEnabled = false
+            upButtons[index + 1].isEnabled = true
         }
         
         if index == userData.count - 2 {
-            downButtons[index].isEnabled = false
-            downButtons[index + 1].isEnabled = true
+            downButtons[index].isEnabled = true
+            downButtons[index + 1].isEnabled = false
         }
     }
 
@@ -212,15 +212,22 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
         timeData.remove(at: index)
         upButtons.remove(at: index)
         downButtons.remove(at: index)
-        upButtons[index].isEnabled = (index == 0)
-        downButtons[index].isEnabled = (index == userData.count - 1)
+        if(upButtons.count != 0){
+            upButtons[index].isEnabled = !(index == 0)
+            downButtons[index].isEnabled = !(index == userData.count - 1)
+        }
         saveData()
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!][1] = textField.text ?? " "
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!][0] = textField.text ?? " "
         saveData()
         return true
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!][0] = textField.text ?? " "
+        saveData()
     }
     func saveData(){
         defaults.set(userData, forKey: "data")
