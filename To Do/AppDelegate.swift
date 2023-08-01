@@ -13,6 +13,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let userInterfaceStyle = UserDefaults.standard.string(forKey: "AppTheme") ?? "system"
+            
+        if userInterfaceStyle == "light" {
+            application.windows.forEach { window in
+                window.overrideUserInterfaceStyle = .light
+            }
+        } else if userInterfaceStyle == "dark" {
+            application.windows.forEach { window in
+                window.overrideUserInterfaceStyle = .dark
+            }
+        }
         return true
     }
 
