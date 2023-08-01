@@ -52,6 +52,7 @@ class ViewController: UIViewController {
                 
                 // Set the image of the UIImageView
                 backgroundImageView.image = backgroundImage
+                backgroundImageView.image = backgroundImage
         
         // Configure the stack view
         stackView.axis = .vertical
@@ -92,6 +93,7 @@ class ViewController: UIViewController {
             titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
             titleLabel.textAlignment = .left
             titleLabel.sizeToFit()
+            titleLabel.textColor = ColorTheme.label
             let countLabel = UILabel()
             let timeLabel = UILabel()
             if(userData[i].count > 1){
@@ -105,12 +107,14 @@ class ViewController: UIViewController {
                 timeLabel.textAlignment = .right
                 timeLabel.sizeToFit()
                 timeLabel.translatesAutoresizingMaskIntoConstraints = false
+                timeLabel.textColor = ColorTheme.label
                 blurredBackgroundView.contentView.addSubview(timeLabel)
                 countLabel.text = "\(userData[i].count - 1)"
                 countLabel.font = UIFont.boldSystemFont(ofSize: 20)
                 countLabel.textAlignment = .right
                 countLabel.sizeToFit()
                 countLabel.translatesAutoresizingMaskIntoConstraints = false
+                countLabel.textColor = ColorTheme.label
                 blurredBackgroundView.contentView.addSubview(countLabel)
                 NSLayoutConstraint.activate([
                     timeLabel.centerYAnchor.constraint(equalTo: blurredBackgroundView.centerYAnchor),
@@ -123,7 +127,7 @@ class ViewController: UIViewController {
             let labelsStackView = UIStackView(arrangedSubviews: [titleLabel])
 
             if(userData[i].count == 1){
-                titleLabel.textColor = UIColor.placeholderText
+                titleLabel.textColor = ColorTheme.placeholderText
             }else{
                 let descriptionLabel = UILabel()
                 var desc = ""
@@ -137,6 +141,7 @@ class ViewController: UIViewController {
                 descriptionLabel.font = UIFont.systemFont(ofSize: 14)
                 descriptionLabel.textAlignment = .left
                 descriptionLabel.sizeToFit()
+                descriptionLabel.textColor = ColorTheme.label
                 labelsStackView.addArrangedSubview(descriptionLabel)
             }
 
@@ -227,7 +232,7 @@ class ViewController: UIViewController {
 
             let labelsStackView = UIStackView(arrangedSubviews: [titleLabel])
 
-            titleLabel.textColor = UIColor.placeholderText
+            titleLabel.textColor = ColorTheme.placeholderText
             
             labelsStackView.axis = .vertical
             labelsStackView.spacing = 5

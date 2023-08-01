@@ -46,7 +46,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                 stackView.addArrangedSubview(transparentView)
                 let circleButton = UIButton()
                 circleButton.backgroundColor = .clear
-                circleButton.layer.borderColor = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
+                circleButton.layer.borderColor = UIColor.white.cgColor
                 circleButton.layer.borderWidth = 1
                 circleButton.layer.cornerRadius = 12.5
                 circleButton.addTarget(self, action: #selector(checked), for: .touchUpInside)
@@ -184,9 +184,24 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                     ])
                     self.saveData()
                 }
-                
-                let navigationController = UINavigationController(rootViewController: timePickerVC)
-                self.present(navigationController, animated: true, completion: nil)
+                // Present the TimePickerViewController in a popover
+               timePickerVC.modalPresentationStyle = .popover
+               let popoverPresentationController = timePickerVC.popoverPresentationController
+               popoverPresentationController?.sourceView = self.view
+
+               // Get the center of the main window scene
+               if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = windowScene.windows.first {
+                   let centerX = window.center.x
+                   let centerY = window.center.y
+
+                   // Set the sourceRect to the center of the main window
+                   popoverPresentationController?.sourceRect = CGRect(x: centerX, y: centerY, width: 0, height: 0)
+               }
+               popoverPresentationController?.permittedArrowDirections = []
+//                let navController = UINavigationController(rootViewController: timePickerVC)
+//                            self.present(navController, animated: true, completion: nil)
+               self.present(timePickerVC, animated: true, completion: nil)
             }
         }
         alertController.addAction(cancelAction)

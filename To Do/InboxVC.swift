@@ -15,12 +15,15 @@ class InboxVC: UIViewController, UITextFieldDelegate {
     var stackIDs: [Int] = []
     var lastID = 0
     override func viewDidLoad() {
+        self.tabBarController!.tabBar.isHidden = true
+        performSegue(withIdentifier: "SetupSegue", sender: nil)
         super.viewDidLoad()
         if let tryData = defaults.object(forKey: "inbox") as? [String] {
             userData = tryData
         }else{
             userData = ["Example task"]
             defaults.set(userData, forKey: "inbox")
+            
         }
         stackView.axis = .vertical
         stackView.spacing = 5
@@ -87,6 +90,10 @@ class InboxVC: UIViewController, UITextFieldDelegate {
         if(userData.count == 0){
             promptTask()
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController!.tabBar.isHidden = false
     }
     @objc func checked(sender: UIButton) {
         let index = stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!
@@ -174,5 +181,12 @@ class InboxVC: UIViewController, UITextFieldDelegate {
     }
     func saveData(){
         defaults.set(userData, forKey: "inbox")
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Check if the segue is the one you want to disable the back button for.
+        if segue.identifier == "SetupSegue" {
+            // Hide the back button in the destination view controller's navigation item.
+            segue.destination.navigationItem.setHidesBackButton(true, animated: false)
+        }
     }
 }
