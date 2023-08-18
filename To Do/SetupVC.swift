@@ -13,6 +13,14 @@ class SetupVC: UIViewController {
     @IBOutlet weak var BackgroundImage2: UIImageView!
     @IBOutlet weak var BackgroundImage3: UIImageView!
     
+    @IBOutlet weak var NextButton: UIButton!
+    @IBOutlet weak var BackButton: UIButton!
+    
+    @IBOutlet weak var Page1: UIView!
+    @IBOutlet weak var Page2: UIView!
+    
+    var currentPage = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         BackgroundImage.translatesAutoresizingMaskIntoConstraints = false
@@ -39,6 +47,9 @@ class SetupVC: UIViewController {
             BackgroundImage3.heightAnchor.constraint(equalToConstant: newLength),
         ])
         backgroundRotate()
+        Page1.layer.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height * 0.5)
+        Page2.layer.position = CGPoint(x: UIScreen.main.bounds.width * 1.5, y: UIScreen.main.bounds.height * 0.5)
+        BackButton.isEnabled = false
     }
     
     func backgroundRotate(){
@@ -57,5 +68,31 @@ class SetupVC: UIViewController {
 
     @IBAction func ExitSetup(_ sender: UIButton) {
         navigationController?.popViewController(animated: false)
+    }
+    
+    @IBAction func nextButton(_ sender: UIButton) {
+        print("next")
+        currentPage += 1
+        if(currentPage == 2){
+            NextButton.isEnabled = false
+            UIView.animate(withDuration: 0.5, animations: {
+                self.Page1.layer.position = CGPoint(x: -1 *  UIScreen.main.bounds.width * 1.5, y: UIScreen.main.bounds.height * 0.5)
+                self.Page2.layer.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height * 0.5)
+            })
+        }
+        BackButton.isEnabled = true
+    }
+    
+    @IBAction func backButton(_ sender: UIButton) {
+        print("back")
+        currentPage -= 1
+        if(currentPage == 1){
+            BackButton.isEnabled = false
+            UIView.animate(withDuration: 0.5, animations: {
+                self.Page1.layer.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height * 0.5)
+                self.Page2.layer.position = CGPoint(x: UIScreen.main.bounds.width * 1.5, y: UIScreen.main.bounds.height * 0.5)
+            })
+        }
+        NextButton.isEnabled = true
     }
 }

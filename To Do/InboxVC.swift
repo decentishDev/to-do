@@ -15,15 +15,14 @@ class InboxVC: UIViewController, UITextFieldDelegate {
     var stackIDs: [Int] = []
     var lastID = 0
     override func viewDidLoad() {
-        self.tabBarController!.tabBar.isHidden = true
-        performSegue(withIdentifier: "SetupSegue", sender: nil)
         super.viewDidLoad()
         if let tryData = defaults.object(forKey: "inbox") as? [String] {
             userData = tryData
         }else{
             userData = ["Example task"]
             defaults.set(userData, forKey: "inbox")
-            
+            self.tabBarController!.tabBar.isHidden = true
+            performSegue(withIdentifier: "SetupSegue", sender: nil)
         }
         stackView.axis = .vertical
         stackView.spacing = 5
@@ -33,7 +32,7 @@ class InboxVC: UIViewController, UITextFieldDelegate {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 65),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -90,6 +89,24 @@ class InboxVC: UIViewController, UITextFieldDelegate {
         if(userData.count == 0){
             promptTask()
         }
+        
+        // Create a UIImageView and set its frame to fill the entire view
+        let backgroundImageView = UIImageView(frame: view.bounds)
+        
+        // Set the content mode to scale the image to fit the view bounds
+        backgroundImageView.contentMode = .scaleAspectFill
+        
+        // Add the UIImageView to the view
+        view.addSubview(backgroundImageView)
+        
+        // Send the UIImageView to the back so it acts as the background
+        view.sendSubviewToBack(backgroundImageView)
+        
+        // Replace "backgroundImageName" with the name of your image file
+        let backgroundImage = UIImage(named: "milad-fakurian-seA-FPPXL-M-unsplash.jpg")
+        
+        // Set the image of the UIImageView
+        backgroundImageView.image = backgroundImage
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

@@ -36,23 +36,22 @@ class ViewController: UIViewController {
         }
         
         // Create a UIImageView and set its frame to fill the entire view
-                let backgroundImageView = UIImageView(frame: view.bounds)
-                
-                // Set the content mode to scale the image to fit the view bounds
-                backgroundImageView.contentMode = .scaleAspectFill
-                
-                // Add the UIImageView to the view
-                view.addSubview(backgroundImageView)
-                
-                // Send the UIImageView to the back so it acts as the background
-                view.sendSubviewToBack(backgroundImageView)
-                
-                // Replace "backgroundImageName" with the name of your image file
-                let backgroundImage = UIImage(named: "tom-barrett-hgGplX3PFBg-unsplash.jpg")
-                
-                // Set the image of the UIImageView
-                backgroundImageView.image = backgroundImage
-                backgroundImageView.image = backgroundImage
+        let backgroundImageView = UIImageView(frame: view.bounds)
+        
+        // Set the content mode to scale the image to fit the view bounds
+        backgroundImageView.contentMode = .scaleAspectFill
+        
+        // Add the UIImageView to the view
+        view.addSubview(backgroundImageView)
+        
+        // Send the UIImageView to the back so it acts as the background
+        view.sendSubviewToBack(backgroundImageView)
+        
+        // Replace "backgroundImageName" with the name of your image file
+        let backgroundImage = UIImage(named: "milad-fakurian-qCYKtOov--s-unsplash.jpg")
+        
+        // Set the image of the UIImageView
+        backgroundImageView.image = backgroundImage
         
         // Configure the stack view
         stackView.axis = .vertical
