@@ -19,6 +19,7 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
     var upButtons: [UIButton] = []
     var stackIDs: [Int] = []
     var lastID = 0
+    var backgroundImageView = UIImageView()
     override func viewDidLoad() {
         super.viewDidLoad()
         userData = defaults.object(forKey: "data") as! [[String]]
@@ -32,7 +33,7 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 65),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -113,20 +114,16 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
                     textField.trailingAnchor.constraint(equalTo: upButton.leadingAnchor, constant: -10)
                 ])
             }
-            NSLayoutConstraint.activate([
-                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
-                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -10),
-                stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-                stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-                stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20),
-                stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor) // Add this constraint
-            ])
         }
     }
+//    override func viewWillAppear(_ animated: Bool) {
+//        backgroundImageView = UIImageView(frame: view.bounds)
+//        backgroundImageView.contentMode = .scaleAspectFill
+//        view.addSubview(backgroundImageView)
+//        view.sendSubviewToBack(backgroundImageView)
+//        let backgroundImage = UIImage(named: defaults.object(forKey: "groupsBackground") as! String)
+//        backgroundImageView.image = backgroundImage
+//    }
     @objc func moveTaskUp(sender: UIButton){
         let index = upButtons.firstIndex(of: sender)!
         
@@ -233,4 +230,18 @@ class EditFoldersVC: UIViewController, UITextFieldDelegate {
         defaults.set(userData, forKey: "data")
         defaults.set(timeData, forKey: "times")
     }
+    
+    @IBAction func EditBackground(_ sender: UIBarButtonItem) {
+        let backgroundSelectionVC = BackgroundImagePicker()
+        backgroundSelectionVC.modalPresentationStyle = .fullScreen
+        let navigationController = UINavigationController(rootViewController: backgroundSelectionVC)
+        navigationController.modalPresentationStyle = .fullScreen
+        let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(dismissBackgroundSelectionVC))
+        backgroundSelectionVC.navigationItem.leftBarButtonItem = backButton
+        present(navigationController, animated: true, completion: nil)
+    }
+    @objc func dismissBackgroundSelectionVC() {
+        dismiss(animated: true, completion: nil)
+    }
+    
 }

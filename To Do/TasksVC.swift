@@ -17,9 +17,15 @@ class TasksVC: UIViewController, UITextFieldDelegate {
     let scrollView = UIScrollView()
     var stackIDs: [Int] = []
     var lastID = 0
+    var backgroundImageView = UIImageView()
     override func viewDidLoad() {
         super.viewDidLoad()
         title = titleName
+        backgroundImageView = UIImageView(frame: view.bounds)
+        backgroundImageView.contentMode = .scaleAspectFill
+        view.addSubview(backgroundImageView)
+        view.sendSubviewToBack(backgroundImageView)
+        let backgroundImage = UIImage(named: userData[0])
         stackView.axis = .vertical
         stackView.spacing = 5
         stackView.alignment = .fill
@@ -28,7 +34,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 65),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -38,8 +44,8 @@ class TasksVC: UIViewController, UITextFieldDelegate {
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20)
         ])
-        if(userData.count > 0){
-            for i in 0...(userData.count - 1) {
+        if(userData.count > 1){
+            for i in 1...(userData.count - 1) {
                 let transparentView = UIView()
                 transparentView.backgroundColor = UIColor.clear
                 transparentView.layer.cornerRadius = 10
@@ -56,7 +62,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                 transparentView.addSubview(circleButton)
                 circleButton.translatesAutoresizingMaskIntoConstraints = false
                 let editButton = UIButton()
-                editButton.setTitle(String(format: "%02d:%02d", timeData[i] / 60, timeData[i] % 60), for: .normal)
+                editButton.setTitle(String(format: "%02d:%02d", timeData[i - 1] / 60, timeData[i - 1] % 60), for: .normal)
                 editButton.setTitleColor(.systemBlue, for: .normal)
                 editButton.addTarget(self, action: #selector(self.editTimeButtonTapped(sender:)), for: .touchUpInside)
                 transparentView.addSubview(editButton)
@@ -113,7 +119,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
             self.stackView.layoutIfNeeded()
         }
         stackIDs.remove(at: stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!)
-        userData.remove(at: index)
+        userData.remove(at: index + 1)
         timeData.remove(at: index)
         saveData()
     }
@@ -210,13 +216,13 @@ class TasksVC: UIViewController, UITextFieldDelegate {
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!] = textField.text ?? " "
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)! + 1] = textField.text ?? " "
         saveData()
         return true
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.resignFirstResponder()
-        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!] = textField.text ?? " "
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)! + 1] = textField.text ?? " "
         saveData()
     }
     func saveData(){

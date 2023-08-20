@@ -8,6 +8,8 @@ class ViewController: UIViewController {
     var userData: [[String]] = [[]]
     var timeData: [[Int]] = [[]]
     var currentFolder = 0
+    var currentBackground = 1
+    var backgroundImageView = UIImageView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +20,7 @@ class ViewController: UIViewController {
         if let tryData = defaults.object(forKey: "data") as? [[String]] {
             userData = tryData
         }else{
-            userData = [["Example folder", "Example task"]]
+            userData = [["Example folder", "color1.jpg", "Example task"]]
             defaults.set(userData, forKey: "data")
         }
         if let tryData = defaults.object(forKey: "times") as? [[Int]] {
@@ -34,23 +36,12 @@ class ViewController: UIViewController {
         for subview in view.subviews {
             subview.removeFromSuperview()
         }
-        
-        // Create a UIImageView and set its frame to fill the entire view
-        let backgroundImageView = UIImageView(frame: view.bounds)
-        
-        // Set the content mode to scale the image to fit the view bounds
+
+        backgroundImageView = UIImageView(frame: view.bounds)
         backgroundImageView.contentMode = .scaleAspectFill
-        
-        // Add the UIImageView to the view
         view.addSubview(backgroundImageView)
-        
-        // Send the UIImageView to the back so it acts as the background
         view.sendSubviewToBack(backgroundImageView)
-        
-        // Replace "backgroundImageName" with the name of your image file
-        let backgroundImage = UIImage(named: "milad-fakurian-qCYKtOov--s-unsplash.jpg")
-        
-        // Set the image of the UIImageView
+        let backgroundImage = UIImage(named: defaults.object(forKey: "groupsBackground") as! String)
         backgroundImageView.image = backgroundImage
         
         // Configure the stack view
@@ -187,7 +178,7 @@ class ViewController: UIViewController {
         let folder = sender.accessibilityIdentifier
         currentFolder = Int(folder ?? "0") ?? 0
         performSegue(withIdentifier: "folderSegue", sender: nil)
-    }
+            }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "folderSegue"){
@@ -212,7 +203,7 @@ class ViewController: UIViewController {
         }
         let saveAction = UIAlertAction(title: "Save", style: .default) { (action) in
             guard let folderName = alertController.textFields?.first?.text else { return }
-            self.userData.append([folderName])
+            self.userData.append([folderName, "color1.jpg"])
             self.timeData.append([])
             self.defaults.set(self.userData, forKey: "data")
             self.defaults.set(self.timeData, forKey: "times")
