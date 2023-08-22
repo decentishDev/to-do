@@ -13,6 +13,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
     var timeData: [Int] = []
     var currentFolder = 0
     var titleName = ""
+    var backgroundName = "color1.jpg"
     let stackView = UIStackView()
     let scrollView = UIScrollView()
     var stackIDs: [Int] = []
@@ -25,7 +26,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
         backgroundImageView.contentMode = .scaleAspectFill
         view.addSubview(backgroundImageView)
         view.sendSubviewToBack(backgroundImageView)
-        let backgroundImage = UIImage(named: userData[0])
+        let backgroundImage = UIImage(named: backgroundName)
         stackView.axis = .vertical
         stackView.spacing = 5
         stackView.alignment = .fill
@@ -44,8 +45,8 @@ class TasksVC: UIViewController, UITextFieldDelegate {
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20)
         ])
-        if(userData.count > 1){
-            for i in 1...(userData.count - 1) {
+        if(userData.count > 0){
+            for i in 0...(userData.count - 1) {
                 let transparentView = UIView()
                 transparentView.backgroundColor = UIColor.clear
                 transparentView.layer.cornerRadius = 10
@@ -96,8 +97,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
                     lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
                 }
             }
-        }
-        if(userData.count == 0){
+        }else{
             promptTask(animated: false)
         }
     }
@@ -119,7 +119,7 @@ class TasksVC: UIViewController, UITextFieldDelegate {
             self.stackView.layoutIfNeeded()
         }
         stackIDs.remove(at: stackIDs.firstIndex(of: Int(sender.accessibilityIdentifier!)!)!)
-        userData.remove(at: index + 1)
+        userData.remove(at: index)
         timeData.remove(at: index)
         saveData()
     }
@@ -216,19 +216,20 @@ class TasksVC: UIViewController, UITextFieldDelegate {
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)! + 1] = textField.text ?? " "
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!] = textField.text ?? " "
         saveData()
         return true
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.resignFirstResponder()
-        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)! + 1] = textField.text ?? " "
+        userData[stackIDs.firstIndex(of: Int(textField.accessibilityIdentifier!)!)!] = textField.text ?? " "
         saveData()
     }
     func saveData(){
         var oldData: [[String]] = defaults.object(forKey: "data") as! [[String]]
         var newData: [String] = userData
         newData.insert(titleName, at: 0)
+        newData.insert(backgroundName, at: 1)
         oldData[currentFolder] = newData
         defaults.set(oldData, forKey: "data")
         var oldTimes: [[Int]] = defaults.object(forKey: "times") as! [[Int]]
